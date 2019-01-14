@@ -36,7 +36,7 @@ namespace CardBoard.api.Controllers
         public ActionResult<Board> Get(int id) // z parametrem sprzydaje sie do dokumentacji
         {
             var board = _boards.SingleOrDefault(b => b.Id == id);
-            if(board is null)
+            if (board is null)
             {
                 return NotFound();
             }
@@ -44,7 +44,7 @@ namespace CardBoard.api.Controllers
         }
         [HttpPost]
         public ActionResult Post(CreateBoard request)
-       {
+        {
             var id = _boards.Max(b => b.Id) + 1;
             var board = new Board(id, request.Name, request.Description);
             _boards.Add(board);
@@ -52,7 +52,34 @@ namespace CardBoard.api.Controllers
             //return Created($"http://localhost:5000/boards/{id}",null);
 
             return CreatedAtAction(nameof(Get), new { id }, null);
-       }
+        }
 
+        [HttpPut("{id}")]
+        public ActionResult Put(UpdateBoard request,int id)
+        {
+        var board = _boards.SingleOrDefault(b => b.Id == id);
+            if (board is null)
+            {
+                return NotFound();
+            }
+            board.Name = request.Name;
+            board.Description = request.Description;
+
+            return Ok();
+        }
+
+
+        [HttpDelete("{id}")]
+        public ActionResult Delete(int id)
+        {
+            var board = _boards.SingleOrDefault(b => b.Id == id);
+            if (board is null)
+            {
+                return NotFound();
+            }
+            _boards.Remove(board);
+
+            return NoContent();
+        }
     }
 }
