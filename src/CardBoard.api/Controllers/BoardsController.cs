@@ -21,15 +21,26 @@ namespace CardBoard.api.Controllers
         //}
         private static List<Board> _boards = new List<Board>
         {
-            new Board(1,"Board1","Opis1"),
-            new Board(2,"Board2","Opis2"),
-            new Board(3,"Board3","Opis3")
+            new Board(1,"Bo","Opis1"),
+            new Board(2,"Ao","Opis2"),
+            new Board(3,"Zo","Opis3")
         };
 
         [HttpGet]
         public ActionResult<IEnumerable<Board>> Get() // z parametrem sprzydaje sie do dokumentacji
         {
             return _boards;
+        }
+
+        [HttpGet]
+        public ActionResult<IEnumerable<Board>> Get(string name) // z parametrem sprzydaje sie do dokumentacji
+        {
+            var boards = _boards.AsEnumerable();
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                boards = boards.Where(b => b.Name.Contains(name));
+            }
+            return Ok(boards);
         }
 
         [HttpGet("{id:int}")] // Walidacja po : tutaj po int
